@@ -15,6 +15,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.spritesheet.get_sprite(32,112,16,16)
         self.rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.inflate(0,-5)
+        self.original_position = None
         
         self.import_player_assets()
         self.status = 'down'
@@ -239,20 +240,21 @@ class Player(pygame.sprite.Sprite):
 
         previous_center = self.rect.center
 
-        if 'attack' in self.status and int(self.frame_index) in range(3, 8):  # Example for larger attack frames
-            
-            self.rect = self.image.get_rect()
+        if 'attack' in self.status and int(self.frame_index) in range(3, 8):  # Attack frames
+            if self.original_position is None:
+                self.original_position = previous_center
 
-
+            # Calculate offset based on image size difference
             width_difference = self.rect.width - self.image.get_width()
-            x_offset = width_difference // 2  # Adjust to keep the visual center in place
+            x_offset = width_difference // 2
 
+            # Apply offset to maintain original position
+            self.rect.centerx = self.original_position[0] + x_offset
+            self.rect.centery = self.original_position[1]
 
-            self.rect.centerx = previous_center[0] - 32
-            self.rect.centery = previous_center[1]
-        
-        # else:
-        #     self.rect = self.image.get_rect(center=self.hitbox.center)
+        else:
+            # Restore original position for non-attack states
+            self.rect = self.image.get_rect(center=self.hitbox.center)
     
 
     def update(self):
