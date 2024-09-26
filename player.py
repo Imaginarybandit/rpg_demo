@@ -121,11 +121,11 @@ class Player(pygame.sprite.Sprite):
                     self.attackgraphics.get_sprite(32,192,16,16),
                     self.attackgraphics.get_sprite(112,192,16,16),
                     self.attackgraphics.get_sprite(192,192,16,16),
-                    self.attackgraphics.get_sprite(272,192,16,16),
-                    self.attackgraphics.get_sprite(352,192,16,16),
-                    self.attackgraphics.get_sprite(432,192,16,16),
-                    self.attackgraphics.get_sprite(512,192,16,16),
-                    self.attackgraphics.get_sprite(592,192,16,16),
+                    self.attackgraphics.get_sprite(256,192,32,16),
+                    self.attackgraphics.get_sprite(336,192,32,16),
+                    self.attackgraphics.get_sprite(416,192,32,16),
+                    self.attackgraphics.get_sprite(496,192,32,16),
+                    self.attackgraphics.get_sprite(576,192,32,16),
                     self.attackgraphics.get_sprite(672,192,16,16)],
                     'right_attack':[
                     self.attackgraphics.get_sprite(32,272,16,16),
@@ -195,11 +195,12 @@ class Player(pygame.sprite.Sprite):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
 
-        self.hitbox.x += self.direction.x * speed
-        self.collision('horizontal')
-        self.hitbox.y += self.direction.y * speed
-        self.collision('vertical')
-        self.rect.center = self.hitbox.center
+        if not self.attacking:
+            self.hitbox.x += self.direction.x * speed
+            self.collision('horizontal')
+            self.hitbox.y += self.direction.y * speed
+            self.collision('vertical')
+            self.rect.center = self.hitbox.center
 
     def collision(self,direction):
         if direction == 'horizontal':
@@ -227,34 +228,32 @@ class Player(pygame.sprite.Sprite):
                 self.attacking =False
 
     def animate(self):
-        animation = self.animations[self.status]
-        
-        
-        self.frame_index += self.animation_speed
-        if self.frame_index >= len(animation):
+       animation = self.animations[self.status]
+    
+       self.frame_index += self.animation_speed
+    
+       if self.frame_index >= len(animation):
             self.frame_index = 0
         
-        self.image = animation[int(self.frame_index)]
+       self.image = animation[int(self.frame_index)]
 
-        #print(self.rect.centerx)
+       previous_center = self.rect.center
+       previous_hitbox_center = self.hitbox.center
 
-        previous_center = self.rect.center
-
-        if 'attack' in self.status and int(self.frame_index) in range(3, 8):  # Attack frames
+       if 'right_attack' in self.status and int(self.frame_index) in range(3, 8):  # Attack frames
             if self.original_position is None:
                 self.original_position = previous_center
 
-            # Calculate offset based on image size difference
-            width_difference = self.rect.width - self.image.get_width()
-            x_offset = width_difference // 2
+            
+       elif 'left_attack' in self.status and int(self.frame_index) in range(3, 8):
+            if self.original_position is None:
+                self.original_position = previous_center
 
-            # Apply offset to maintain original position
-            self.rect.centerx = self.original_position[0] + x_offset
-            self.rect.centery = self.original_position[1]
-
-        else:
+            self.rect = self.image.get_rect(center=(self.hitbox.center[0] - 8,self.hitbox.center[1]))
+            
+       else:
             # Restore original position for non-attack states
-            self.rect = self.image.get_rect(center=self.hitbox.center)
+            self.rect = self.image.get_rect(center=previous_hitbox_center)
     
 
     def update(self):

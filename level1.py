@@ -100,16 +100,16 @@ class Level:
                                 Tile((x,y),[self.visible_sprites,self.obstacle_sprites],'objects',image)
 
         self.player = Player((192,560),[self.visible_sprites],self.obstacle_sprites)
-
+       
     
         
     def run(self):
 
         #update and draw the game
-        
+       
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
-        debug(self.player.status)
+       
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
@@ -128,8 +128,12 @@ class YSortCameraGroup(pygame.sprite.Group):
 
     def custom_draw(self,player):
 
-        self.offset.x = player.rect.centerx - self.half_width
+            
+        self.offset.x = player.rect.centerx - self.half_width 
         self.offset.y = player.rect.centery - self.half_height
+        
+        if player.status == 'left_attack' and int(player.frame_index) in range(3, 8): 
+            self.offset.x = self.offset.x + 8
         
         floor_offset_pos = self.floor_rect.topleft - self.offset
 
