@@ -67,36 +67,36 @@ class Player(pygame.sprite.Sprite):
                     self.movementgraphics.get_sprite(352,272,16,16),
                     self.movementgraphics.get_sprite(432,272,16,16)
                 ],'up_idle': [
-                    self.movementgraphics.get_sprite(32,32,16,16),
-                    self.movementgraphics.get_sprite(112,32,16,16),
-                    self.movementgraphics.get_sprite(192,32,16,16),
-                    self.movementgraphics.get_sprite(272,32,16,16),
-                    self.movementgraphics.get_sprite(352,32,16,16),
-                    self.movementgraphics.get_sprite(432,32,16,16)
+                    self.idlegraphics.get_sprite(32,32,16,16),
+                    self.idlegraphics.get_sprite(112,32,16,16),
+                    self.idlegraphics.get_sprite(192,32,16,16),
+                    self.idlegraphics.get_sprite(272,32,16,16),
+                    self.idlegraphics.get_sprite(352,32,16,16),
+                    self.idlegraphics.get_sprite(432,32,16,16)
                 ],
                 'down_idle':[
-                    self.movementgraphics.get_sprite(32,112,16,16),
-                    self.movementgraphics.get_sprite(112,112,16,16),
-                    self.movementgraphics.get_sprite(192,112,16,16),
-                    self.movementgraphics.get_sprite(272,112,16,16),
-                    self.movementgraphics.get_sprite(352,112,16,16),
-                    self.movementgraphics.get_sprite(432,112,16,16)
+                    self.idlegraphics.get_sprite(32,112,16,16),
+                    self.idlegraphics.get_sprite(112,112,16,16),
+                    self.idlegraphics.get_sprite(192,112,16,16),
+                    self.idlegraphics.get_sprite(272,112,16,16),
+                    self.idlegraphics.get_sprite(352,112,16,16),
+                    self.idlegraphics.get_sprite(432,112,16,16)
                 ],
                 'left_idle':[
-                    self.movementgraphics.get_sprite(32,192,16,16),
-                    self.movementgraphics.get_sprite(112,192,16,16),
-                    self.movementgraphics.get_sprite(192,192,16,16),
-                    self.movementgraphics.get_sprite(272,192,16,16),
-                    self.movementgraphics.get_sprite(352,192,16,16),
-                    self.movementgraphics.get_sprite(432,192,16,16)
+                    self.idlegraphics.get_sprite(32,192,16,16),
+                    self.idlegraphics.get_sprite(112,192,16,16),
+                    self.idlegraphics.get_sprite(192,192,16,16),
+                    self.idlegraphics.get_sprite(272,192,16,16),
+                    self.idlegraphics.get_sprite(352,192,16,16),
+                    self.idlegraphics.get_sprite(432,192,16,16)
                 ],
                 'right_idle':[
-                    self.movementgraphics.get_sprite(32,272,16,16),
-                    self.movementgraphics.get_sprite(112,272,16,16),
-                    self.movementgraphics.get_sprite(192,272,16,16),
-                    self.movementgraphics.get_sprite(272,272,16,16),
-                    self.movementgraphics.get_sprite(352,272,16,16),
-                    self.movementgraphics.get_sprite(432,272,16,16)
+                    self.idlegraphics.get_sprite(32,272,16,16),
+                    self.idlegraphics.get_sprite(112,272,16,16),
+                    self.idlegraphics.get_sprite(192,272,16,16),
+                    self.idlegraphics.get_sprite(272,272,16,16),
+                    self.idlegraphics.get_sprite(352,272,16,16),
+                    self.idlegraphics.get_sprite(432,272,16,16)
                 ],'up_attack':[
                     self.attackgraphics.get_sprite(32,32,16,16),
                     self.attackgraphics.get_sprite(112,32,16,32),
@@ -111,11 +111,11 @@ class Player(pygame.sprite.Sprite):
                     self.attackgraphics.get_sprite(32,112,16,16),
                     self.attackgraphics.get_sprite(112,112,16,16),
                     self.attackgraphics.get_sprite(192,112,16,16),
-                    self.attackgraphics.get_sprite(272,112,16,16),
-                    self.attackgraphics.get_sprite(352,112,16,16),
-                    self.attackgraphics.get_sprite(432,112,16,16),
-                    self.attackgraphics.get_sprite(512,112,16,16),
-                    self.attackgraphics.get_sprite(592,112,16,16),
+                    self.attackgraphics.get_sprite(256,112,32,32),
+                    self.attackgraphics.get_sprite(336,112,32,32),
+                    self.attackgraphics.get_sprite(432,112,16,32),
+                    self.attackgraphics.get_sprite(512,112,16,32),
+                    self.attackgraphics.get_sprite(592,112,16,32),
                     self.attackgraphics.get_sprite(672,112,16,16)
                 ],'left_attack':[
                     self.attackgraphics.get_sprite(32,192,16,16),
@@ -228,6 +228,7 @@ class Player(pygame.sprite.Sprite):
                 self.attacking =False
 
     def animate(self):
+       
        animation = self.animations[self.status]
     
        self.frame_index += self.animation_speed
@@ -250,7 +251,22 @@ class Player(pygame.sprite.Sprite):
                 self.original_position = previous_center
 
             self.rect = self.image.get_rect(center=(self.hitbox.center[0] - 8,self.hitbox.center[1]))
+
+       elif 'down_attack' in self.status and int(self.frame_index) in range(3, 8):
+           
+           if int(self.frame_index) in [3,4]:
+                self.rect = self.image.get_rect(center=(self.hitbox.center[0] - 8,self.hitbox.center[1] +8))
+
+           else:
+                self.rect = self.image.get_rect(center=(self.hitbox.center[0] ,self.hitbox.center[1] + 8  ))
             
+       elif 'up_attack' in self.status and int(self.frame_index) in range(1, 8):
+           
+           if int(self.frame_index) in [1,2]:
+                self.rect = self.image.get_rect(center=(self.hitbox.center[0] ,self.hitbox.center[1] + 8  ))
+
+           else:
+                 self.rect = self.image.get_rect(center=(self.hitbox.center[0] ,self.hitbox.center[1] - 8  ))
        else:
             # Restore original position for non-attack states
             self.rect = self.image.get_rect(center=previous_hitbox_center)

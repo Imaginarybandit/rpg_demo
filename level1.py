@@ -134,7 +134,25 @@ class YSortCameraGroup(pygame.sprite.Group):
         
         if player.status == 'left_attack' and int(player.frame_index) in range(3, 8): 
             self.offset.x = self.offset.x + 8
+
+        elif player.status == 'down_attack' and int(player.frame_index) in range(3, 8):
+           
+           if int(player.frame_index) in [3,4]:
+                
+                self.offset.x = self.offset.x + 8
+                self.offset.y = self.offset.y - 8
+           else:
+                self.offset.y = self.offset.y - 8
         
+        elif player.status == 'up_attack'  and int(player.frame_index) in range(1, 8):
+           
+           if int(player.frame_index) in [1,2]:
+                
+                self.offset.y = self.offset.y - 8
+           else:
+                
+                self.offset.y = self.offset.y + 8
+                
         floor_offset_pos = self.floor_rect.topleft - self.offset
 
         self.display_surface.blit(self.floor_surf,floor_offset_pos)
