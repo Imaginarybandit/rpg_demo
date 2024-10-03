@@ -33,8 +33,17 @@ class Weapon(pygame.sprite.Sprite):
                 self.weapon_graphics.get_sprite(432,16,32,32),
                 self.weapon_graphics.get_sprite(512,16,32,32),
                 self.weapon_graphics.get_sprite(592,32,32,16),
-            ]
-        }
+            ], 'left':[
+                        self.weapon_graphics.get_sprite(16,32,32,16),
+                self.weapon_graphics.get_sprite(96,32,32,16),
+                self.weapon_graphics.get_sprite(176,32,32,32),
+                self.weapon_graphics.get_sprite(256,16,48,32),
+                self.weapon_graphics.get_sprite(352,16,32,32),
+                self.weapon_graphics.get_sprite(432,16,32,32),
+                self.weapon_graphics.get_sprite(512,16,32,32),
+                self.weapon_graphics.get_sprite(592,32,32,16),
+                ]        
+}
 
     
     def animate(self):
