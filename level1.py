@@ -8,6 +8,7 @@ from debug import debug
 from support import import_csv_layout
 from spritesheet import Spritesheet
 from details import details
+from weapons import Weapon
 
 class Level:
     def __init__(self):
@@ -17,6 +18,8 @@ class Level:
         #sprtie group setup
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
+
+        self.current_attack = None
 
         self.details = details
 
@@ -99,9 +102,16 @@ class Level:
                                 image = spritesheet.get_sprite(384,160,16,16)
                                 Tile((x,y),[self.visible_sprites,self.obstacle_sprites],'objects',image)
 
-        self.player = Player((192,560),[self.visible_sprites],self.obstacle_sprites)
+        self.player = Player((192,560),[self.visible_sprites],self.obstacle_sprites,self.create_attack,self.destroy_attack)
        
-    
+    def create_attack(self):
+       
+        self.current_attack = Weapon(self.player,[self.visible_sprites],self.player.hitbox.center)
+
+    def destroy_attack(self):
+        if self.current_attack:
+            self.current_attack.kill()
+        self.current_attack = None
         
     def run(self):
 
@@ -143,6 +153,8 @@ class YSortCameraGroup(pygame.sprite.Group):
                 self.offset.y = self.offset.y - 8
            else:
                 self.offset.y = self.offset.y - 8
+
+           
         
         elif player.status == 'up_attack'  and int(player.frame_index) in range(1, 8):
            
@@ -155,9 +167,15 @@ class YSortCameraGroup(pygame.sprite.Group):
                 
         floor_offset_pos = self.floor_rect.topleft - self.offset
 
-        self.display_surface.blit(self.floor_surf,floor_offset_pos)
-
+        self.display_surface.blit(self.floor_surf,floor_offset_pos) 
+        
+        
         for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
+            
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image,offset_pos)
+            
+           
+
+
                  

@@ -1,10 +1,11 @@
 import pygame
 from settings import *
 from spritesheet import Spritesheet
+from weapons import Weapon
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,obstacle_sprites):
+    def __init__(self,pos,groups,obstacle_sprites,create_attack,destroy_attack,weapon = None):
         super().__init__(groups)
 
         self.movementgraphics = Spritesheet("./graphics/player/Chris Walk.png")
@@ -14,13 +15,13 @@ class Player(pygame.sprite.Sprite):
         self.spritesheet = Spritesheet('./graphics/player/Chris Idle.png')
         self.image = self.spritesheet.get_sprite(32,112,16,16)
         self.rect = self.image.get_rect(topleft = pos)
-        self.hitbox = self.rect.inflate(0,-5)
+        self.hitbox = self.rect.inflate(0,0)
         self.original_position = None
         
         self.import_player_assets()
         self.status = 'down'
         self.frame_index = 0
-        self.animation_speed = 0.18
+        self.animation_speed = 0.16
 
         self.obstacles_sprites =obstacle_sprites
 
@@ -31,6 +32,8 @@ class Player(pygame.sprite.Sprite):
         self.attacking = False
         self.attack_cooldown = 500
         self.attack_time = None
+        self.create_attack = create_attack
+        self.destroy_attack = destroy_attack
 
     def import_player_assets(self):
         self.animations = {
@@ -145,30 +148,34 @@ class Player(pygame.sprite.Sprite):
         
     def inputs(self):
 
-        keys = pygame.key.get_pressed()
+        if not self.attacking:
 
-        if keys[pygame.K_w]:
-            self.direction.y = -1
-            self.status = 'up'
-        elif keys[pygame.K_s]:
-            self.direction.y = 1
-            self.status = 'down'
-        else:
-            self.direction.y= 0
-            
-        if keys[pygame.K_a]:
-            self.direction.x = -1
-            self.status = 'left'
-        elif keys[pygame.K_d]:
-            self.direction.x = 1
-            self.status = 'right'
-        else:
-            self.direction.x= 0 
+            keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_SPACE] and not self.attacking:
-            self.attacking = True
-            self.attack_time = pygame.time.get_ticks()
-            
+            if keys[pygame.K_w]:
+                self.direction.y = -1
+                self.status = 'up'
+            elif keys[pygame.K_s]:
+                self.direction.y = 1
+                self.status = 'down'
+            else:
+                self.direction.y= 0
+                
+            if keys[pygame.K_a]:
+                self.direction.x = -1
+                self.status = 'left'
+            elif keys[pygame.K_d]:
+                self.direction.x = 1
+                self.status = 'right'
+            else:
+                self.direction.x= 0 
+
+            if keys[pygame.K_SPACE]:
+                self.attacking = True
+                self.attack_time = pygame.time.get_ticks()
+                
+                self.create_attack()
+                
 
     def get_status(self):
         if self.direction.x == 0 and self.direction.y == 0:
@@ -184,7 +191,8 @@ class Player(pygame.sprite.Sprite):
                     self.status = self.status.replace('_idle','_attack')
                 else:   
                     self.status = self.status + '_attack'
-
+            
+            
         else:
             if 'attack' in self.status:
                 self.status = self.status.replace('_attack','')
@@ -226,11 +234,15 @@ class Player(pygame.sprite.Sprite):
         if self.attacking:
             if current_time - self.attack_time >= self.attack_cooldown:
                 self.attacking =False
+                self.frame_index = 0
+                self.destroy_attack()
 
     def animate(self):
        
        animation = self.animations[self.status]
-    
+       
+       
+
        self.frame_index += self.animation_speed
     
        if self.frame_index >= len(animation):
@@ -247,8 +259,6 @@ class Player(pygame.sprite.Sprite):
 
             
        elif 'left_attack' in self.status and int(self.frame_index) in range(3, 8):
-            if self.original_position is None:
-                self.original_position = previous_center
 
             self.rect = self.image.get_rect(center=(self.hitbox.center[0] - 8,self.hitbox.center[1]))
 
