@@ -34,15 +34,24 @@ class Weapon(pygame.sprite.Sprite):
                 self.weapon_graphics.get_sprite(512,16,32,32),
                 self.weapon_graphics.get_sprite(592,32,32,16),
             ], 'left':[
-                        self.weapon_graphics.get_sprite(16,32,32,16),
-                self.weapon_graphics.get_sprite(96,32,32,16),
-                self.weapon_graphics.get_sprite(176,32,32,32),
-                self.weapon_graphics.get_sprite(256,16,48,32),
-                self.weapon_graphics.get_sprite(352,16,32,32),
-                self.weapon_graphics.get_sprite(432,16,32,32),
-                self.weapon_graphics.get_sprite(512,16,32,32),
-                self.weapon_graphics.get_sprite(592,32,32,16),
-                ]        
+                self.weapon_graphics.get_sprite(32,192,32,32),
+                self.weapon_graphics.get_sprite(112,192,32,32),
+                self.weapon_graphics.get_sprite(192,192,32,32),
+                self.weapon_graphics.get_sprite(256,192,32,32),
+                self.weapon_graphics.get_sprite(336,176,32,32),
+                self.weapon_graphics.get_sprite(416,176,32,32),
+                self.weapon_graphics.get_sprite(496,176,32,32),
+                self.weapon_graphics.get_sprite(576,176,32,32),
+                ],  'right':[
+                self.weapon_graphics.get_sprite(16,272,32,16),
+                self.weapon_graphics.get_sprite(96,272,32,16),
+                self.weapon_graphics.get_sprite(176,272,32,16),
+                self.weapon_graphics.get_sprite(272,256,32,48),
+                self.weapon_graphics.get_sprite(352,272,32,32),
+                self.weapon_graphics.get_sprite(432,272,32,32),
+                self.weapon_graphics.get_sprite(512,272,32,32),
+                self.weapon_graphics.get_sprite(592,272,32,32),
+                ]      
 }
 
     
@@ -103,17 +112,38 @@ class Weapon(pygame.sprite.Sprite):
 
                     if int(self.player.frame_index) in (0,1):
                             
-                            self.rect = self.image.get_rect(center = (self.player_center[0] -8 ,self.player_center[1] ))
+                            self.rect = self.image.get_rect(center = (self.player_center[0] + 8  ,self.player_center[1] + 8))
                         
                     elif int(self.player.frame_index) == 2:
-                            self.rect = self.image.get_rect(center = (self.player_center[0] -8 ,self.player_center[1] + 8 ))
+                            self.rect = self.image.get_rect(center = (self.player_center[0] + 8 ,self.player_center[1] + 8 ))
                     elif int(self.player.frame_index) == 3:
-                            self.rect = self.image.get_rect(center = (self.player_center[0]  ,self.player_center[1] - 8 ))
+                            self.rect = self.image.get_rect(center = (self.player_center[0] -8  ,self.player_center[1]))
                     elif int(self.player.frame_index) in (4,5):
-                            self.rect = self.image.get_rect(center = (self.player_center[0] + 8  ,self.player_center[1] -8 ))
+                            self.rect = self.image.get_rect(center = (self.player_center[0] -8 ,self.player_center[1] -8  ))
                     elif int(self.player.frame_index) in (6,7):
-                            self.rect = self.image.get_rect(center = (self.player_center[0] + 8  ,self.player_center[1] ))
+                            self.rect = self.image.get_rect(center = (self.player_center[0] - 8  ,self.player_center[1] -8 ))
 
+        elif self.direction == 'right':
+               animation = self.animations[self.direction]
+
+               if int(self.player.frame_index) < len(animation):
+                    
+                    self.frame_index = int(self.player.frame_index)
+
+                    self.image = animation[int(self.player.frame_index)]
+
+                    if int(self.player.frame_index) in (0,1):
+                            
+                            self.rect = self.image.get_rect(center = (self.player_center[0] -8  ,self.player_center[1] ))
+                        
+                    elif int(self.player.frame_index) == 2:
+                            self.rect = self.image.get_rect(center = (self.player_center[0] - 8 ,self.player_center[1]  ))
+                    elif int(self.player.frame_index) == 3:
+                            self.rect = self.image.get_rect(center = (self.player_center[0] + 8 ,self.player_center[1] ))
+                    elif int(self.player.frame_index) in (4,5):
+                            self.rect = self.image.get_rect(center = (self.player_center[0] +8 ,self.player_center[1] +8 ))
+                    elif int(self.player.frame_index) in (6,7):
+                            self.rect = self.image.get_rect(center = (self.player_center[0] +8 ,self.player_center[1] + 8 ))
                 
     def update (self):
         self.animate()
