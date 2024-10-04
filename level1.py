@@ -9,6 +9,7 @@ from support import import_csv_layout
 from spritesheet import Spritesheet
 from details import details
 from weapons import Weapon
+from ui import UI
 
 class Level:
     def __init__(self):
@@ -20,11 +21,15 @@ class Level:
         self.obstacle_sprites = pygame.sprite.Group()
 
         self.current_attack = None
+        self.interact_sprites = pygame.sprite.Group()
+        self.interactable_sprites = pygame.sprite.Group()
 
         self.details = details
 
         #Sprite Setup
         self.create_map()
+
+        self.ui = UI()
 
     def create_map(self):
         layout ={
@@ -96,14 +101,20 @@ class Level:
                             if col == '260':
                                 spritesheet = Spritesheet('./graphics/objects/Solaria Demo Tiles.png')
                                 image = spritesheet.get_sprite(128,144,16,16)
-                                Tile((x,y),[self.visible_sprites,self.obstacle_sprites],'objects',image)
+                                Tile((x,y),[self.visible_sprites,self.obstacle_sprites,self.interactable_sprites],'objects',image)
                             if col == '304':
                                 spritesheet = Spritesheet('./graphics/objects/Solaria Demo Tiles.png')
                                 image = spritesheet.get_sprite(384,160,16,16)
                                 Tile((x,y),[self.visible_sprites,self.obstacle_sprites],'objects',image)
 
-        self.player = Player((192,560),[self.visible_sprites],self.obstacle_sprites,self.create_attack,self.destroy_attack)
+        self.player = Player((192,560),[self.visible_sprites,self.interact_sprites],self.obstacle_sprites,self.create_attack,self.destroy_attack)
        
+
+    def item_iteraction(self):
+        for interact in self.interact_sprites:
+            collision_sprites = pygame.sprite.spritecollide(interact,self.interactable_sprites,False)
+            if collision_sprites:
+                print("ollision")
     def create_attack(self):
        
         self.current_attack = Weapon(self.player,[self.visible_sprites],self.player.hitbox.center)
@@ -119,6 +130,8 @@ class Level:
        
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
+        self.item_iteraction()
+        self.ui.display(self.player)
        
 
 class YSortCameraGroup(pygame.sprite.Group):

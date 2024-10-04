@@ -15,7 +15,7 @@ class Player(pygame.sprite.Sprite):
         self.spritesheet = Spritesheet('./graphics/player/Chris Idle.png')
         self.image = self.spritesheet.get_sprite(32,112,16,16)
         self.rect = self.image.get_rect(topleft = pos)
-        self.hitbox = self.rect.inflate(0,0)
+        self.hitbox = self.rect.inflate(0,-5)
         self.original_position = None
         
         self.import_player_assets()
@@ -34,6 +34,10 @@ class Player(pygame.sprite.Sprite):
         self.attack_time = None
         self.create_attack = create_attack
         self.destroy_attack = destroy_attack
+
+        self.stats = {'health': 5, 'attack': 10,'speed': 6}
+        self.inventory = {}
+        self.health = self.stats['health']
 
     def import_player_assets(self):
         self.animations = {
@@ -143,9 +147,7 @@ class Player(pygame.sprite.Sprite):
                     ]
 
             }
-                           #'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]}
-
-        
+                                
     def inputs(self):
 
         if not self.attacking:
