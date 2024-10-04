@@ -9,6 +9,7 @@ from support import import_csv_layout
 from spritesheet import Spritesheet
 from details import details
 from weapons import Weapon
+from interactable_items import Interact
 from ui import UI
 
 class Level:
@@ -23,6 +24,7 @@ class Level:
         self.current_attack = None
         self.interact_sprites = pygame.sprite.Group()
         self.interactable_sprites = pygame.sprite.Group()
+        self.popup_sprites = pygame.sprite.Group()
 
         self.details = details
 
@@ -30,6 +32,8 @@ class Level:
         self.create_map()
 
         self.ui = UI()
+        self.interact_icon = None
+        self.interact_object = None
 
     def create_map(self):
         layout ={
@@ -114,7 +118,29 @@ class Level:
         for interact in self.interact_sprites:
             collision_sprites = pygame.sprite.spritecollide(interact,self.interactable_sprites,False)
             if collision_sprites:
-                print("ollision")
+                for target_sprite in collision_sprites:
+                    if target_sprite.sprite_type == 'objects':
+                        
+                        self.player.can_interact = True
+                        self.interact_icon = Interact(target_sprite,[self.visible_sprites,self.popup_sprites])
+                        self.interact_object = target_sprite
+                        
+                        break
+            else:  
+               
+                self.player.can_interact = False
+                for sprite in self.popup_sprites:
+                    sprite.kill()
+                
+    def interaction_destroy(self):
+       
+        if  self.player.can_interact == False and not self.interact_icon == None:
+            
+            self.interact_icon.kill()
+            self.interact_icon = None
+            self.interact_object = None
+        
+
     def create_attack(self):
        
         self.current_attack = Weapon(self.player,[self.visible_sprites],self.player.hitbox.center)
@@ -127,13 +153,13 @@ class Level:
     def run(self):
 
         #update and draw the game
-       
+        
+        self.item_iteraction()
+        self.interaction_destroy()
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
-        self.item_iteraction()
         self.ui.display(self.player)
        
-
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
 

@@ -18,6 +18,7 @@ class UI:
         text_rect = text_surf.get_rect(topleft = (x,y))
         pygame.draw.rect(self.display_surface,UI_BG_COLOR,text_rect.inflate(15,10))
         self.display_surface.blit(text_surf,text_rect)
+        
 
 
     def display(self,player):

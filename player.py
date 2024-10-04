@@ -5,7 +5,7 @@ from weapons import Weapon
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,obstacle_sprites,create_attack,destroy_attack,weapon = None):
+    def __init__(self,pos,groups,obstacle_sprites,create_attack,destroy_attack):
         super().__init__(groups)
 
         self.movementgraphics = Spritesheet("./graphics/player/Chris Walk.png")
@@ -28,6 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2()
         self.speed = 1.5
 
+        self.can_interact = False
 
         self.attacking = False
         self.attack_cooldown = 500
@@ -36,7 +37,7 @@ class Player(pygame.sprite.Sprite):
         self.destroy_attack = destroy_attack
 
         self.stats = {'health': 5, 'attack': 10,'speed': 6}
-        self.inventory = {}
+        self.weapon = []
         self.health = self.stats['health']
 
     def import_player_assets(self):
@@ -172,6 +173,10 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.direction.x= 0 
 
+
+            if keys[pygame.K_f]:
+                self.interact = True
+                
             if keys[pygame.K_SPACE]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
