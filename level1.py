@@ -105,13 +105,13 @@ class Level:
                             if col == '260':
                                 spritesheet = Spritesheet('./graphics/objects/Solaria Demo Tiles.png')
                                 image = spritesheet.get_sprite(128,144,16,16)
-                                Tile((x,y),[self.visible_sprites,self.obstacle_sprites,self.interactable_sprites],'objects',image)
+                                Tile((x,y),[self.visible_sprites,self.obstacle_sprites,self.interactable_sprites],'objects',image,'Sword')
                             if col == '304':
                                 spritesheet = Spritesheet('./graphics/objects/Solaria Demo Tiles.png')
                                 image = spritesheet.get_sprite(384,160,16,16)
-                                Tile((x,y),[self.visible_sprites,self.obstacle_sprites],'objects',image)
+                                Tile((x,y),[self.visible_sprites,self.obstacle_sprites,self.interactable_sprites],'objects',image,'House_Key')
 
-        self.player = Player((192,560),[self.visible_sprites,self.interact_sprites],self.obstacle_sprites,self.create_attack,self.destroy_attack)
+        self.player = Player((192,560),[self.visible_sprites,self.interact_sprites],self.obstacle_sprites,self.create_attack,self.destroy_attack,self.get_item)
        
 
     def item_iteraction(self):
@@ -120,11 +120,11 @@ class Level:
             if collision_sprites:
                 for target_sprite in collision_sprites:
                     if target_sprite.sprite_type == 'objects':
-                        
                         self.player.can_interact = True
-                        self.interact_icon = Interact(target_sprite,[self.visible_sprites,self.popup_sprites])
+                        spritesheet = Spritesheet('./graphics/objects/Solaria Demo Tiles.png')
+                        image = spritesheet.get_sprite(128,128,16,16)
+                        self.interact_icon = Interact(target_sprite,[self.visible_sprites,self.popup_sprites],image)
                         self.interact_object = target_sprite
-                        
                         break
             else:  
                
@@ -132,14 +132,17 @@ class Level:
                 for sprite in self.popup_sprites:
                     sprite.kill()
                 
-    def interaction_destroy(self):
-       
-        if  self.player.can_interact == False and not self.interact_icon == None:
-            
-            self.interact_icon.kill()
-            self.interact_icon = None
-            self.interact_object = None
-        
+    def get_item(self):
+         for interact in self.interact_sprites:
+            collision_sprites = pygame.sprite.spritecollide(interact,self.interactable_sprites,False)
+            if collision_sprites:
+                for target_sprite in collision_sprites:
+                    if target_sprite.sprite_type == 'objects':
+                        self.player.items.append(target_sprite.name)
+                        target_sprite.kill()
+                        print(self.player.items)
+                        break
+           
 
     def create_attack(self):
        
@@ -153,9 +156,7 @@ class Level:
     def run(self):
 
         #update and draw the game
-        
         self.item_iteraction()
-        self.interaction_destroy()
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
         self.ui.display(self.player)
@@ -207,14 +208,23 @@ class YSortCameraGroup(pygame.sprite.Group):
         floor_offset_pos = self.floor_rect.topleft - self.offset
 
         self.display_surface.blit(self.floor_surf,floor_offset_pos) 
+
+        interact_sprite = None
         
+        for sprite in self.sprites():
+            if isinstance(sprite,Interact):
+                interact_sprite = sprite
+
         
+
         for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
             
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image,offset_pos)
             
-           
+        if not interact_sprite == None:
+            offset_pos = interact_sprite.rect.topleft - self.offset
+            self.display_surface.blit(interact_sprite.image,offset_pos)
 
 
                  
