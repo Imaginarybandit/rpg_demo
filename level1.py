@@ -140,7 +140,7 @@ class Level:
                     if target_sprite.sprite_type == 'objects':
                         self.player.items.append(target_sprite.name)
                         target_sprite.kill()
-                        print(self.player.items)
+                        
                         break
            
 
