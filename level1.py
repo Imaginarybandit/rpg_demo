@@ -11,6 +11,7 @@ from details import details
 from weapons import Weapon
 from interactable_items import Interact
 from ui import UI
+from enemy import Enemy
 
 class Level:
     def __init__(self):
@@ -40,7 +41,8 @@ class Level:
             'boundary' : import_csv_layout('./map/Map._FloorBlocks.csv'),
             'details': import_csv_layout('./map/Map._Details.csv'),
             'extra_details': import_csv_layout('./map/Map._Details 2.csv'),
-            'objects':import_csv_layout('./map/Map._Objects.csv')
+            'objects':import_csv_layout('./map/Map._Objects.csv'),
+            'entities':import_csv_layout('./map/Map._Entities.csv')
         }
 
         for style,layout in layout.items():
@@ -110,9 +112,12 @@ class Level:
                                 spritesheet = Spritesheet('./graphics/objects/Solaria Demo Tiles.png')
                                 image = spritesheet.get_sprite(384,160,16,16)
                                 Tile((x,y),[self.visible_sprites,self.obstacle_sprites,self.interactable_sprites],'objects',image,'House_Key')
+                        if style == 'entities':
+                            if col == '217':
+                                self.player = Player((x,y),[self.visible_sprites,self.interact_sprites],self.obstacle_sprites,self.create_attack,self.destroy_attack,self.get_item)
+                            else:
+                                Enemy('blob',(x,y),[self.visible_sprites])
 
-        self.player = Player((192,560),[self.visible_sprites,self.interact_sprites],self.obstacle_sprites,self.create_attack,self.destroy_attack,self.get_item)
-       
 
     def item_iteraction(self):
         for interact in self.interact_sprites:
