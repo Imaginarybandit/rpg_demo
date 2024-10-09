@@ -27,5 +27,5 @@ weapon_data = {
 }
 
 monster_data = {
-   'blob':{ 'health': 30,'damage':1,'attack_type':'contact','speed':2,'resistance':3,'attack_radius':80,'notice_radius':360}
+   'blob':{ 'health': 30,'damage':1,'attack_type':'contact','speed':1,'resistance':1.5,'attack_radius':60,'notice_radius':120}
 }
