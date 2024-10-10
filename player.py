@@ -25,21 +25,22 @@ class Player(Entity):
 
         self.obstacles_sprites =obstacle_sprites
 
-        self.speed = 1.5
-
+        
         self.can_interact = False
 
         self.attacking = False
-        self.attack_cooldown = 500
+        self.attack_cooldown = 400
         self.attack_time = None
         self.create_attack = create_attack
         self.destroy_attack = destroy_attack
         self.get_item = get_item
 
-        self.stats = {'health': 5, 'attack': 10,'speed': 6}
+        self.stats = {'health': 100, 'attack': 5,'speed': 2}
         self.weapons = []
+        self.weapon = weapon_data['sword']
         self.items = []
         self.health = self.stats['health']
+        self.speed = self.stats['speed']
 
     def import_player_assets(self):
         self.animations = {
@@ -220,8 +221,6 @@ class Player(Entity):
        
        animation = self.animations[self.status]
        
-       
-
        self.frame_index += self.animation_speed
     
        if self.frame_index >= len(animation):
@@ -260,6 +259,11 @@ class Player(Entity):
             # Restore original position for non-attack states
             self.rect = self.image.get_rect(center=previous_hitbox_center)
     
+    def get_full_weapon_damage(self):
+        base_damage = self.stats['attack']
+        weapon_damage = self.weapon['damage'] 
+        print(base_damage + weapon_damage)
+        return base_damage + weapon_damage
 
     def update(self):
 

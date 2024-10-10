@@ -23,9 +23,9 @@ ENERGY_COLOR = 'blue'
 UI_BORDER_COLOR_ACTIVE = 'gold'
 
 weapon_data = {
-    'sword': {'cooldown':100,'damage':15,'graphics':'./graphics/player/Chris Sword 01.png'}
+    'sword': {'cooldown':100,'damage':10,'graphics':'./graphics/player/Chris Sword 01.png'}
 }
 
 monster_data = {
-   'blob':{ 'health': 30,'damage':1,'attack_type':'contact','speed':1,'resistance':1.5,'attack_radius':60,'notice_radius':120}
+   'blob':{ 'health': 30,'damage':20,'attack_type':'contact','speed':1,'resistance':1,'attack_radius':10,'notice_radius':120}
 }

@@ -4,7 +4,7 @@ class Entity(pygame.sprite.Sprite):
     def __init__(self,groups):
         super().__init__(groups)
         self.frame_index = 0
-        self.animation_speed = 0.16
+        self.animation_speed = 0.20
         self.direction = pygame.math.Vector2()
 
     def move(self,speed):
@@ -13,6 +13,7 @@ class Entity(pygame.sprite.Sprite):
             self.direction = self.direction.normalize()
 
         if not self.attacking:
+            
             self.hitbox.x += self.direction.x * speed
             self.collision('horizontal')
             self.hitbox.y += self.direction.y * speed

@@ -4,6 +4,7 @@ from spritesheet import Spritesheet
 class Weapon(pygame.sprite.Sprite):
     def __init__(self,player,groups,player_center):
         super().__init__(groups)
+        self.sprite_type = 'weapon'
         self.player = player
         self.direction = self.player.status.split('_')[0]
         
