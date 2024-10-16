@@ -6,7 +6,7 @@ ZOOM_FACTOR = 2.0
 
 # ui 
 BAR_HEIGHT = 10
-HEALTH_BAR_WIDTH = 10
+HEALTH_BAR_WIDTH = 100
 ENERGY_BAR_WIDTH = 140
 ITEM_BOX_SIZE = 80
 UI_FONT = './graphics/font/joystix.ttf'

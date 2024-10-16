@@ -42,6 +42,10 @@ class Player(Entity):
         self.health = self.stats['health']
         self.speed = self.stats['speed']
 
+        self.vulnerable = True
+        self.hurt_time = None
+        self.invulnerability_duration = 400
+
     def import_player_assets(self):
         self.animations = {
 
@@ -217,6 +221,10 @@ class Player(Entity):
                 self.frame_index = 0
                 self.destroy_attack()
 
+        if not self.vulnerable:
+            if current_time - self.hurt_time >= self.invulnerability_duration:
+                self.vulnerable = True
+
     def animate(self):
        
        animation = self.animations[self.status]
@@ -258,11 +266,13 @@ class Player(Entity):
        else:
             # Restore original position for non-attack states
             self.rect = self.image.get_rect(center=previous_hitbox_center)
+
+        
     
     def get_full_weapon_damage(self):
         base_damage = self.stats['attack']
         weapon_damage = self.weapon['damage'] 
-        print(base_damage + weapon_damage)
+        
         return base_damage + weapon_damage
 
     def update(self):

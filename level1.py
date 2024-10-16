@@ -119,7 +119,7 @@ class Level:
                             if col == '217':
                                 self.player = Player((x,y),[self.visible_sprites,self.interact_sprites],self.obstacle_sprites,self.create_attack,self.destroy_attack,self.get_item)
                             else:
-                                Enemy('blob',(x,y),[self.visible_sprites,self.attackable_sprites],self.obstacle_sprites)
+                                Enemy('blob',(x,y),[self.visible_sprites,self.attackable_sprites],self.obstacle_sprites,self.damage_player)
 
 
     def item_iteraction(self):
@@ -169,6 +169,14 @@ class Level:
                     for target_sprite in collision_sprites:
                         if target_sprite.sprite_type == 'enemy':
                             target_sprite.get_damage(self.player,attack_sprite.sprite_type)
+
+    def damage_player(self,amount,attack_type):
+        if self.player.vulnerable:
+            self.player.health -= amount
+            self.player.vulnerable = False
+            self.player.hurt_time = pygame.time.get_ticks()
+
+
                             
     def run(self):
 
